@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#17233f" />
+  <meta name="description" content="一个帮助你执行两周降温计划的私人清单。" />
+  <title>两周降温计划</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2317233f'/%3E%3Cpath d='M18 33c8-15 20-15 28 0-8 15-20 15-28 0Z' fill='%237ed6c4'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23fff'/%3E%3C/svg%3E" />
+  <style>
+    :root{--ink:#17233f;--muted:#64708a;--paper:#f5f7fb;--card:#fff;--mint:#7ed6c4;--mint-dark:#247d70;--blue:#dce7ff;--line:#e5e9f2;--danger:#a64958;--shadow:0 18px 45px rgba(36,52,86,.10)}
+    *{box-sizing:border-box}html{background:var(--paper);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:16px}body{margin:0;min-height:100vh;background:radial-gradient(circle at 90% -5%,#dce7ff 0,transparent 35%),var(--paper)}
+    button,input,textarea{font:inherit}button{cursor:pointer}.app{max-width:720px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 18px calc(96px + env(safe-area-inset-bottom))}
+    header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin:8px 2px 24px}.eyebrow{color:var(--mint-dark);font-weight:800;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}.title{font-size:clamp(1.8rem,7vw,2.5rem);line-height:1.1;margin:.35rem 0 .45rem;letter-spacing:-.04em}.sub{color:var(--muted);margin:0;line-height:1.55}.day-pill{flex:0 0 auto;background:var(--ink);color:white;border-radius:999px;padding:10px 13px;font-weight:800;font-size:.88rem;box-shadow:var(--shadow)}
+    .progress-wrap{margin:0 2px 22px}.progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.86rem;margin-bottom:8px}.progress{height:9px;background:#e4e8f1;border-radius:20px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),#5eb8d7);border-radius:20px;transition:width .35s ease}
+    .card{background:var(--card);border:1px solid rgba(225,229,239,.9);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin:14px 0}.card h2{font-size:1.17rem;margin:0 0 4px}.hint{color:var(--muted);margin:0 0 17px;font-size:.9rem;line-height:1.55}
+    .task{display:flex;gap:13px;align-items:flex-start;padding:15px 0;border-top:1px solid var(--line)}.task:first-of-type{border-top:0}.task input{position:absolute;opacity:0;pointer-events:none}.check{width:27px;height:27px;border:2px solid #cbd3e3;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;transition:.2s}.check:after{content:'✓';color:white;font-weight:900;opacity:0;transform:scale(.5);transition:.2s}.task input:checked+.check{background:var(--mint-dark);border-color:var(--mint-dark)}.task input:checked+.check:after{opacity:1;transform:scale(1)}.task-copy strong{display:block;font-size:1rem;margin:1px 0 4px}.task-copy span{color:var(--muted);font-size:.87rem;line-height:1.45}.task input:checked~.task-copy{opacity:.55}.task input:checked~.task-copy strong{text-decoration:line-through}
+    .care-row{display:flex;gap:10px}.care-row input{min-width:0;flex:1;border:1px solid var(--line);background:#f8f9fc;border-radius:14px;padding:13px 14px;color:var(--ink);outline:none}.care-row input:focus,textarea:focus{border-color:var(--mint-dark);box-shadow:0 0 0 3px rgba(36,125,112,.12)}.care-row button,.primary,.secondary{border:0;border-radius:14px;padding:13px 16px;font-weight:800}.care-row button,.primary{background:var(--ink);color:white}.secondary{background:#eef2f8;color:var(--ink)}
+    .urge-card{background:linear-gradient(145deg,#17233f,#263d68);color:white;overflow:hidden;position:relative}.urge-card:after{content:'';position:absolute;width:190px;height:190px;border:1px solid rgba(126,214,196,.28);border-radius:50%;right:-95px;top:-100px}.urge-card .hint{color:#cbd5e8}.urge-card .primary{background:var(--mint);color:#12293a;width:100%;font-size:1.05rem;padding:16px;position:relative;z-index:1}.mini{font-size:.83rem;color:#cbd5e8;margin:13px 0 0;text-align:center}
+    .days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:15px}.day{aspect-ratio:1;border-radius:12px;border:1px solid var(--line);background:#f7f8fb;display:grid;place-items:center;font-size:.82rem;color:var(--muted);font-weight:700}.day.active{border:2px solid var(--ink);color:var(--ink)}.day.done{background:var(--mint);color:#133b35;border-color:transparent}.day.future{opacity:.42}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px}.stat{background:#f7f9fc;border-radius:16px;padding:13px 8px;text-align:center}.stat b{display:block;font-size:1.35rem}.stat span{color:var(--muted);font-size:.76rem}
+    dialog{border:0;border-radius:26px;width:min(92vw,560px);padding:0;box-shadow:0 28px 80px rgba(12,26,54,.3);color:var(--ink)}dialog::backdrop{background:rgba(18,29,51,.62);backdrop-filter:blur(5px)}.modal{padding:24px}.modal h2{margin:0 0 7px}.modal p{color:var(--muted);line-height:1.55}.scale{display:flex;gap:7px;justify-content:space-between;margin:18px 0}.scale button{width:34px;height:40px;border:1px solid var(--line);background:#f7f9fc;border-radius:10px;font-weight:800;color:var(--muted)}.scale button.selected{background:var(--ink);color:white;border-color:var(--ink)}.modal textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--line);border-radius:14px;padding:12px;outline:none}.modal-actions{display:flex;gap:10px;margin-top:16px}.modal-actions button{flex:1}.timer{font-variant-numeric:tabular-nums;font-size:3.8rem;font-weight:900;letter-spacing:-.06em;text-align:center;margin:20px 0 8px}.timer-note{text-align:center;color:var(--muted);margin-bottom:20px}.breath{width:90px;height:90px;border-radius:50%;background:var(--mint);margin:18px auto;animation:breathe 8s ease-in-out infinite;opacity:.75}@keyframes breathe{50%{transform:scale(1.35);opacity:1}}
+    .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:white;border-radius:999px;padding:12px 18px;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:10;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .privacy{text-align:center;color:var(--muted);font-size:.78rem;line-height:1.5;margin-top:18px}@media(max-width:420px){.app{padding-left:14px;padding-right:14px}.card{padding:18px}.stats{gap:6px}.stat{padding:11px 4px}.day-pill{font-size:.8rem}.title{font-size:1.9rem}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.breath{animation:none}.progress>i,.toast{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div><div class="eyebrow">14 day reset</div><h1 class="title">两周降温计划</h1><p class="sub" id="todayText">今天只做今天的份。</p></div>
+      <div class="day-pill" id="dayPill">第 1 天</div>
+    </header>
+    <section class="progress-wrap" aria-label="两周进度"><div class="progress-meta"><span>两周进度</span><span id="progressLabel">0 / 14 天</span></div><div class="progress"><i id="progressBar"></i></div></section>
+
+    <section class="card">
+      <h2>今天的三件事</h2><p class="hint">不等状态完美，做过一点也算完成。</p>
+      <label class="task"><input type="checkbox" data-task="move"><span class="check"></span><span class="task-copy"><strong>让身体动起来</strong><span>散步、拉伸或任何会让身体微微发热的活动。</span></span></label>
+      <label class="task"><input type="checkbox" data-task="focus"><span class="check"></span><span class="task-copy"><strong>完成一件具体的事</strong><span>选一件能结束、能打勾的小任务，不求宏大。</span></span></label>
+      <label class="task"><input type="checkbox" data-task="connect"><span class="check"></span><span class="task-copy"><strong>一次非恋爱的人际接触</strong><span>和朋友说句话、一起吃饭，或在群里参与一次交流。</span></span></label>
+    </section>
+
+    <section class="card urge-card">
+      <h2>一阵渴望来了</h2><p class="hint">先不分析，也不做决定。给它十分钟经过你。</p>
+      <button class="primary" id="startUrge">开始 10 分钟降温</button>
+      <p class="mini">记录只保存在你的这台设备上</p>
+    </section>
+
+    <section class="card">
+      <h2>今天有什么需要我照料？</h2><p class="hint">不是替代爱情，只是把参与感放回今天。</p>
+      <div class="care-row"><input id="careInput" maxlength="80" placeholder="例如：一顿饭、植物、房间、计划…" aria-label="今天需要照料的事"><button id="saveCare">保存</button></div>
+    </section>
+
+    <section class="card">
+      <h2>你的两周</h2><p class="hint">完成当天三项行动，就会点亮一天。</p><div class="days" id="days"></div>
+      <div class="stats"><div class="stat"><b id="doneDays">0</b><span>完成天数</span></div><div class="stat"><b id="urgeCount">0</b><span>降温次数</span></div><div class="stat"><b id="avgDrop">—</b><span>平均下降</span></div></div>
+    </section>
+    <p class="privacy">这是自我照料工具，不代替专业支持。若情绪让你感到无法保证自身安全，请及时联系身边可信任的人或当地紧急支持。</p>
+  </main>
+
+  <dialog id="urgeDialog"><div class="modal" id="modalBody"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const KEY='calm-plan-v1';
+    const todayKey=()=>new Date().toLocaleDateString('sv-SE');
+    const state=JSON.parse(localStorage.getItem(KEY)||'null')||{start:todayKey(),days:{},urges:[]};
+    const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+    const dateDiff=(a,b)=>Math.floor((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000);
+    const currentDay=Math.max(1,Math.min(14,dateDiff(state.start,todayKey())+1));
+    const today=state.days[todayKey()]||(state.days[todayKey()]={tasks:{},care:''});
+    const toast=(msg)=>{const t=document.querySelector('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)};
+    const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+    function render(){
+      document.querySelector('#dayPill').textContent=`第 ${currentDay} 天`;
+      document.querySelector('#progressBar').style.width=`${currentDay/14*100}%`;
+      document.querySelector('#progressLabel').textContent=`${currentDay} / 14 天`;
+      document.querySelectorAll('[data-task]').forEach(el=>el.checked=!!today.tasks[el.dataset.task]);
+      document.querySelector('#careInput').value=today.care||'';
+      const days=document.querySelector('#days');days.innerHTML='';let done=0;
+      for(let i=1;i<=14;i++){const d=new Date(state.start+'T12:00:00');d.setDate(d.getDate()+i-1);const k=d.toLocaleDateString('sv-SE');const rec=state.days[k];const complete=rec&&['move','focus','connect'].every(x=>rec.tasks&&rec.tasks[x]);if(complete)done++;const e=document.createElement('div');e.className='day '+(complete?'done ':'')+(i===currentDay?'active ':'')+(i>currentDay?'future':'');e.textContent=i;e.title=`第 ${i} 天`;days.appendChild(e)}
+      document.querySelector('#doneDays').textContent=done;document.querySelector('#urgeCount').textContent=state.urges.length;
+      const drops=state.urges.filter(x=>Number.isFinite(x.after)).map(x=>x.before-x.after);document.querySelector('#avgDrop').textContent=drops.length?(drops.reduce((a,b)=>a+b,0)/drops.length).toFixed(1):'—';
+    }
+    document.querySelectorAll('[data-task]').forEach(el=>el.addEventListener('change',()=>{today.tasks[el.dataset.task]=el.checked;save();render();if(['move','focus','connect'].every(x=>today.tasks[x]))toast('今天的三件事完成了')}));
+    document.querySelector('#saveCare').addEventListener('click',()=>{today.care=document.querySelector('#careInput').value.trim();save();toast(today.care?'已留在今天':'已清空')});
+
+    const dlg=document.querySelector('#urgeDialog'),body=document.querySelector('#modalBody');let before=null,timer=null,left=600;
+    function chooseScale(onChoose){body.innerHTML=`<h2>现在有多强？</h2><p>零是几乎没有，十是非常强烈。凭第一反应选一个。</p><div class="scale">${[0,1,2,3,4,5,6,7,8,9,10].map(n=>`<button aria-label="${n}分">${n}</button>`).join('')}</div><div class="modal-actions"><button class="secondary" id="cancel">先退出</button></div>`;body.querySelectorAll('.scale button').forEach(b=>b.onclick=()=>onChoose(Number(b.textContent)));body.querySelector('#cancel').onclick=()=>dlg.close()}
+    document.querySelector('#startUrge').onclick=()=>{dlg.showModal();chooseScale(n=>{before=n;startTimer()})};
+    function startTimer(){left=600;body.innerHTML=`<h2>先让它经过</h2><div class="breath" aria-hidden="true"></div><div class="timer" id="timer">10:00</div><p class="timer-note">自然呼吸。去散步、洗澡、收拾东西，暂时不分析。</p><div class="modal-actions"><button class="secondary" id="finish">提前完成</button></div>`;const tick=()=>{const m=Math.floor(left/60),s=left%60;body.querySelector('#timer').textContent=`${m}:${String(s).padStart(2,'0')}`;if(left--<=0)finishTimer()};tick();timer=setInterval(tick,1000);body.querySelector('#finish').onclick=finishTimer}
+    function finishTimer(){clearInterval(timer);timer=null;chooseScale(n=>saveUrge(n))}
+    function saveUrge(after){body.innerHTML=`<h2>这次已经过去一点了</h2><p>从 <strong>${before} 分</strong> 到 <strong>${after} 分</strong>。可留一句话，也可以直接完成。</p><textarea id="note" maxlength="240" placeholder="刚才我想被需要。现在……"></textarea><div class="modal-actions"><button class="primary" id="done">保存记录</button></div>`;body.querySelector('#done').onclick=()=>{state.urges.push({at:new Date().toISOString(),before,after,note:body.querySelector('#note').value.trim()});save();dlg.close();render();toast('这一次，你没有立刻被它带走')}}
+    dlg.addEventListener('close',()=>{if(timer){clearInterval(timer);timer=null}});render();save();
+  </script>
+</body>
+</html>
