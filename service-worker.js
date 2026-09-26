@@ -1,4 +1,4 @@
-const CACHE = 'two-week-calm-v5';
+const CACHE = 'two-week-calm-v6';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', event => {
